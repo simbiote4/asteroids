@@ -10,7 +10,6 @@ def main():
                 return
         screen.fill((255,255,255), rect=None)
         pygame.display.flip()
-        print("test")
     
 
 if __name__ == "__main__":
