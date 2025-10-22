@@ -8,7 +8,7 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
-        screen.fill((255,255,255), rect=None)
+        screen.fill((0,0,0), rect=None)
         pygame.display.flip()
     
 
