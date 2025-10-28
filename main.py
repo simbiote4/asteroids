@@ -1,46 +1,52 @@
+import sys
 import pygame
 from constants import *
-from player import *
-from asteroid import *
-from asteroidfield import *
+from player import Player
+from asteroid import Asteroid
+from asteroidfield import AsteroidField
+from shot import Shot
 
 def main():
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-    clock = pygame.time.Clock()
-    game_font = pygame.freetype.SysFont(pygame.freetype.get_default_font(), 50)
-    dt = 0
-    x = SCREEN_WIDTH / 2
-    y = SCREEN_HEIGHT / 2
-    
+    clock = pygame.time.Clock()    
 
-# PyGame Groups
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
     asteroids = pygame.sprite.Group()
+    shots = pygame.sprite.Group()
 
-    Player.containers = (updatable, drawable)
     Asteroid.containers = (asteroids, updatable, drawable)
+    Shot.containers = (shots, updatable, drawable)
     AsteroidField.containers = (updatable)
-
-    player = Player(x, y)
     asteroid_field = AsteroidField()
+    
+    Player.containers = (updatable, drawable)
+
+    player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+
+    dt = 0
 
     while True:
-        dt = clock.tick(60) / 1000
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
-        screen.fill((0,0,0), rect=None)
+
         updatable.update(dt)
+
         for asteroid in asteroids:
-            if asteroid.collision(player.position):
-                game_font.render_to(screen, (x, y), "GAME OVER!", (255,255,255))
-                return print("Game Over!")
-        for object in drawable:
-            object.draw(screen)
+            if asteroid.collides_with(player):
+                print("Game Over!")
+                sys.exit()
+        
+        screen.fill("black")
+        
+        for obj in drawable:
+            obj.draw(screen)
+
         pygame.display.flip()
-        clock.tick(60)
+        
+        dt = clock.tick(60) / 1000
 
 if __name__ == "__main__":
     main()
